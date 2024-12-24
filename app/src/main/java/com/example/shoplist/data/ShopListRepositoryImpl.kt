@@ -9,6 +9,17 @@ object ShopListRepositoryImpl : ShopListRepository {
 
     private var shopItemIdIncrement = 0
 
+    init {
+        for (i in 1..10)
+            addShopItem(
+                ShopItem(
+                    name = "Name $i",
+                    count = i,
+                    enable = true,
+                )
+            )
+    }
+
     override fun addShopItem(shopItem: ShopItem) {
         shopItemIdIncrement++
         shopItem.id = shopItemIdIncrement
@@ -22,7 +33,7 @@ object ShopListRepositoryImpl : ShopListRepository {
     override fun editShopItem(shopItem: ShopItem) {
         val oldShopItem = getShopItemById(shopItem.id)
         deleteShopItem(oldShopItem)
-        addShopItem(shopItem)
+        shopList.add(shopItem)
     }
 
     override fun getShopItemById(shopItemId: Int): ShopItem {
