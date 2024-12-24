@@ -16,19 +16,20 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        viewModel.getShopList()
+        Log.d("MainActivity", "VM State: ${viewModel.mainViewModelState.value}")
+
+        viewModel.deleteShopItem(ShopItem(name = "Name 1", count = 1, enable = true, id = 1))
 
         Log.d("MainActivity", "VM State: ${viewModel.mainViewModelState.value}")
 
-        viewModel.deleteShopItem(ShopItem(name="Name 1", count=1, enable=true, id=1))
-
-        Log.d("MainActivity", "VM State: ${viewModel.mainViewModelState.value}")
-
-        viewModel.changeEnableState(ShopItem(name="Name 2 changed", count=2, enable=true, id=2))
-
-        Log.d("MainActivity", "VM State: ${viewModel.mainViewModelState.value}")
-
+        viewModel.changeEnableState(
+            ShopItem(
+                name = "Name 2 changed",
+                count = 2,
+                enable = true,
+                id = 2
+            )
+        )
+        Log.d("MainActivity", "VM State:f ${viewModel.mainViewModelState.value}")
     }
-
-
 }
