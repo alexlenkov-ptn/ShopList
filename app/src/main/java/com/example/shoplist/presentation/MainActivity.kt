@@ -1,35 +1,33 @@
 package com.example.shoplist.presentation
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.example.shoplist.R
-import com.example.shoplist.domain.ShopItem
 
 class MainActivity : AppCompatActivity() {
-    val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels()
+    private lateinit var adapter: ShopListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+        setRecyclerView()
+        viewModel.mainViewModelState.observe(this) {
+            adapter.shopList = it
+        }
+    }
 
-        Log.d("MainActivity", "VM State: ${viewModel.mainViewModelState.value}")
-
-        viewModel.deleteShopItem(ShopItem(name = "Name 1", count = 1, enable = true, id = 1))
-
-        Log.d("MainActivity", "VM State: ${viewModel.mainViewModelState.value}")
-
-        viewModel.changeEnableState(
-            ShopItem(
-                name = "Name 2 changed",
-                count = 2,
-                enable = true,
-                id = 2
-            )
-        )
-        Log.d("MainActivity", "VM State:f ${viewModel.mainViewModelState.value}")
+    private fun setRecyclerView() {
+        val rvShopList = findViewById<RecyclerView>(R.id.rv_shop_list)
+        adapter = ShopListAdapter()
+        rvShopList.adapter = adapter
+        rvShopList.apply {
+            recycledViewPool.setMaxRecycledViews(SHOP_LIST_ENABLED, MAX_POOL_SIZE)
+            recycledViewPool.setMaxRecycledViews(SHOP_LIST_DISABLED, MAX_POOL_SIZE)
+        }
     }
 }
