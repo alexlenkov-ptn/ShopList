@@ -4,8 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
-import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoplist.R
 import com.example.shoplist.domain.ShopItem
@@ -19,8 +18,10 @@ class ShopListAdapter() : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolde
 
     var shopList: List<ShopItem> = listOf()
         set(value) {
+            val callback = ShopListDiffCallback(shopList, value)
+            val diffResult = DiffUtil.calculateDiff(callback)
+            diffResult.dispatchUpdatesTo(this)
             field = value
-            notifyDataSetChanged()
         }
 
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
@@ -52,9 +53,7 @@ class ShopListAdapter() : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolde
         holder.itemView.setOnClickListener {
             onShopClickListener?.invoke(shopItem)
         }
-
-        // todo нужно поставить сюда удаление
-
+        
     }
 
     override fun getItemViewType(position: Int): Int {
