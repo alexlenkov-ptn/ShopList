@@ -1,11 +1,8 @@
 package com.example.shoplist.presentation
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import com.example.shoplist.R
 import com.example.shoplist.domain.ShopItem
 
@@ -14,15 +11,9 @@ const val SHOP_LIST_DISABLED = 0
 const val SHOP_LIST_ENABLED = 1
 const val MAX_POOL_SIZE = 25
 
-class ShopListAdapter() : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
-
-    var shopList: List<ShopItem> = listOf()
-        set(value) {
-            val callback = ShopListDiffCallback(shopList, value)
-            val diffResult = DiffUtil.calculateDiff(callback)
-            diffResult.dispatchUpdatesTo(this)
-            field = value
-        }
+class ShopListAdapter() : ListAdapter<ShopItem, ShopItemViewHolder>(
+    ShopItemDiffCallback()
+) {
 
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
     var onShopClickListener: ((ShopItem) -> Unit)? = null
@@ -41,7 +32,7 @@ class ShopListAdapter() : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolde
     }
 
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
-        val shopItem = shopList[position]
+        val shopItem = getItem(position)
         holder.tvName.text = "${shopItem.name}"
         holder.tvCount.text = shopItem.count.toString()
 
@@ -53,18 +44,11 @@ class ShopListAdapter() : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolde
         holder.itemView.setOnClickListener {
             onShopClickListener?.invoke(shopItem)
         }
-        
+
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (shopList[position].enable) SHOP_LIST_ENABLED
+        return if (getItem(position).enable) SHOP_LIST_ENABLED
         else SHOP_LIST_DISABLED
-    }
-
-    override fun getItemCount(): Int = shopList.size
-
-    class ShopItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tvName = view.findViewById<TextView>(R.id.tv_name)
-        val tvCount = view.findViewById<TextView>(R.id.tv_count)
     }
 }
