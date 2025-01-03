@@ -4,11 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.collection.emptyLongSet
-import androidx.core.content.ContextCompat
+import android.widget.Toast
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoplist.R
 import com.example.shoplist.domain.ShopItem
+
 
 const val SHOP_LIST_DISABLED = 0
 const val SHOP_LIST_ENABLED = 1
@@ -21,6 +22,9 @@ class ShopListAdapter() : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolde
             field = value
             notifyDataSetChanged()
         }
+
+    var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
+    var onShopClickListener: ((ShopItem) -> Unit)? = null
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
@@ -39,6 +43,18 @@ class ShopListAdapter() : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolde
         val shopItem = shopList[position]
         holder.tvName.text = "${shopItem.name}"
         holder.tvCount.text = shopItem.count.toString()
+
+        holder.itemView.setOnLongClickListener {
+            onShopItemLongClickListener?.invoke(shopItem)
+            true
+        }
+
+        holder.itemView.setOnClickListener {
+            onShopClickListener?.invoke(shopItem)
+        }
+
+        // todo нужно поставить сюда удаление
+
     }
 
     override fun getItemViewType(position: Int): Int {
