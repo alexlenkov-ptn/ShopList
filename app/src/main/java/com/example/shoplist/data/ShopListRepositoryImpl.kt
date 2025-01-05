@@ -17,12 +17,13 @@ object ShopListRepositoryImpl : ShopListRepository {
     private var shopItemIdIncrement = 0
 
     init {
-        for (i in 1..10000)
+        for (i in 1..10)
             addShopItem(
                 ShopItem(
                     name = "Name $i",
                     count = i,
                     enable = kotlin.random.Random.nextBoolean(),
+                    id = i,
                 )
             )
     }
