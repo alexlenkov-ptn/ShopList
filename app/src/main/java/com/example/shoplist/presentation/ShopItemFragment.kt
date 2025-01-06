@@ -40,8 +40,6 @@ class ShopItemFragment() : Fragment() {
         parseParams()
     }
 
-    // todo запустить и проверить как работает с перевернутым экраном
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
