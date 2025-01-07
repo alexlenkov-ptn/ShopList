@@ -1,5 +1,6 @@
 package com.example.shoplist.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,6 +17,8 @@ import com.google.android.material.textfield.TextInputLayout
 
 class ShopItemFragment() : Fragment() {
 
+    private lateinit var onEditingFinishedListener: onEditingFinished
+
     private lateinit var tilName: TextInputLayout
     private lateinit var tilCount: TextInputLayout
     private lateinit var etName: EditText
@@ -26,6 +29,12 @@ class ShopItemFragment() : Fragment() {
 
     var screenMode: String = MODE_UNKNOWN
     var shopItemId: Int = ShopItem.UNDEFINED_ID
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is onEditingFinished) onEditingFinishedListener = context
+        else throw RuntimeException("Activity must implement Listener")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,8 +69,8 @@ class ShopItemFragment() : Fragment() {
             tilCount.error = message
         }
 
-        viewModel.shouldCloseScreen.observe(viewLifecycleOwner) { state ->
-            activity?.onBackPressedDispatcher?.onBackPressed()
+        viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
+            onEditingFinishedListener.onEditingFinished()
         }
     }
 
@@ -76,7 +85,6 @@ class ShopItemFragment() : Fragment() {
         etName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
-
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 viewModel.resetErrorInputName()
             }
@@ -108,6 +116,10 @@ class ShopItemFragment() : Fragment() {
         buttonSave.setOnClickListener {
             viewModel.addShopItem(etName.text.toString(), etCount.text.toString())
         }
+    }
+
+    interface onEditingFinished {
+        fun onEditingFinished()
     }
 
     companion object {
