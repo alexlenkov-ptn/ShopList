@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.onEditingFinished {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        Log.d("MainActivityLifecycle", "Created: onCreate")
         setContentView(R.layout.activity_main)
         setRecyclerView()
 
@@ -58,6 +59,36 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.onEditingFinished {
                 .addToBackStack(null)
                 .commit()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("MainActivityLifecycle", "Created: onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("MainActivityLifecycle", "Created: onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("MainActivityLifecycle", "Created: onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("MainActivityLifecycle", "Created: onStop")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.d("MainActivityLifecycle", "Created: onRestart")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("MainActivityLifecycle", "Created: onDestroy")
     }
 
     private fun setRecyclerView() {
