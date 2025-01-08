@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,9 +33,16 @@ class ShopItemFragment() : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        Log.d("ShopItemFragmentLifecycle", "Created: onAttach")
         if (context is onEditingFinished) onEditingFinishedListener = context
         else throw RuntimeException("Activity must implement Listener")
     }
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.d("ShopItemFragmentLifecycle", "Created: onDetach")
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,15 +55,43 @@ class ShopItemFragment() : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         parseParams()
+        Log.d("ShopItemFragmentLifecycle", "Created: onCreate")
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("ShopItemFragmentLifecycle", "Created: onCreate")
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("ShopItemFragmentLifecycle", "Created: onViewCreated")
         viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
         initViews(view)
         addTextChangeListeners()
         launchRightMode()
         observeViewModel()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("ShopItemFragmentLifecycle", "Created: onStart")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("ShopItemFragmentLifecycle", "Created: onStop")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("ShopItemFragmentLifecycle", "Created: onPause")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("ShopItemFragmentLifecycle", "Created: onResume")
     }
 
     private fun observeViewModel() {
