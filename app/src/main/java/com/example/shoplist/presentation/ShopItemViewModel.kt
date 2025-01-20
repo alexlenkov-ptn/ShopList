@@ -14,7 +14,7 @@ const val EMPTY_STRING = ""
 class ShopItemViewModel : ViewModel() {
 
     private val repository = ShopListRepositoryImpl
-    // TODO Так делать не надо. Поправим позже
+    // TODO Так делать не надо. ПоправShopListRepositoryImplим позже
 
     private val getShopItemUseCase = GetShopItemUseCase(repository)
     private val addShopItemUseCase = AddShopItemUseCase(repository)
