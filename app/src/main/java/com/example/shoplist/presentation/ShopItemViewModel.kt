@@ -1,5 +1,7 @@
 package com.example.shoplist.presentation
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,9 +13,9 @@ import com.example.shoplist.domain.ShopItem
 
 const val EMPTY_STRING = ""
 
-class ShopItemViewModel : ViewModel() {
+class ShopItemViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = ShopListRepositoryImpl
+    private val repository = ShopListRepositoryImpl(application)
     // TODO Так делать не надо. ПоправShopListRepositoryImplим позже
 
     private val getShopItemUseCase = GetShopItemUseCase(repository)

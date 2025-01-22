@@ -1,5 +1,7 @@
 package com.example.shoplist.presentation
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,10 +10,11 @@ import com.example.shoplist.domain.DeleteShopItemUseCase
 import com.example.shoplist.domain.EditShopItemUseCase
 import com.example.shoplist.domain.GetShopListUseCase
 import com.example.shoplist.domain.ShopItem
+import java.lang.Appendable
 
-class MainViewModel : ViewModel() {
+class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = ShopListRepositoryImpl
+    private val repository = ShopListRepositoryImpl(application)
     // TODO Так делать не надо. Поправим позже
 
     private val getShopListUseCase = GetShopListUseCase(repository)
