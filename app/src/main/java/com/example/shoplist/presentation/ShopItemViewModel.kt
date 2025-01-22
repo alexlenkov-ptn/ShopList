@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.shoplist.data.ShopListRepositoryImpl
 import com.example.shoplist.domain.AddShopItemUseCase
 import com.example.shoplist.domain.EditShopItemUseCase
@@ -43,16 +44,15 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
 
-    private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     fun getShopItem(shopItemId: Int) {
-        coroutineScope.launch {
+        viewModelScope.launch {
             _shopItem.value = getShopItemUseCase.getShopItemById(shopItemId)
         }
     }
 
     fun addShopItem(inputName: String?, inputCount: String?) {
-        coroutineScope.launch {
+        viewModelScope.launch {
             val name = parseName(inputName)
             val count = parseCount(inputCount)
             val fieldsValid = validateInput(name, count)
@@ -66,7 +66,7 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun editShopItem(inputName: String?, inputCount: String?) {
-        coroutineScope.launch {
+        viewModelScope.launch {
             val name = parseName(inputName)
             val count = parseCount(inputCount)
             val fieldsValid = validateInput(name, count)
@@ -119,10 +119,5 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
 
     private fun finishWork() {
         _shouldCloseScreen.value = Unit
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        coroutineScope.cancel()
     }
 }
