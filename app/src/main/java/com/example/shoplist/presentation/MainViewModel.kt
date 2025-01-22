@@ -10,6 +10,10 @@ import com.example.shoplist.domain.DeleteShopItemUseCase
 import com.example.shoplist.domain.EditShopItemUseCase
 import com.example.shoplist.domain.GetShopListUseCase
 import com.example.shoplist.domain.ShopItem
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import java.lang.Appendable
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
@@ -22,16 +26,23 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val editShopItemUseCase = EditShopItemUseCase(repository)
 
     var mainViewModelState: LiveData<List<ShopItem>> = getShopListUseCase.getShopList()
-
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     fun removeShopItem(shopItem: ShopItem) {
-        deleteShopItemUseCase.deleteShopItem(shopItem)
+        coroutineScope.launch {
+            deleteShopItemUseCase.deleteShopItem(shopItem)
+        }
     }
 
     fun changeEnableState(shopItem: ShopItem) {
-        val newItem = shopItem.copy(enable = !shopItem.enable)
-        editShopItemUseCase.editShopItem(newItem)
+        coroutineScope.launch {
+            val newItem = shopItem.copy(enable = !shopItem.enable)
+            editShopItemUseCase.editShopItem(newItem)
+        }
     }
 
-
+    override fun onCleared() {
+        super.onCleared()
+        coroutineScope.cancel()
+    }
 }

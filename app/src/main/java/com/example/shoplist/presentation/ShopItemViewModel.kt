@@ -10,6 +10,11 @@ import com.example.shoplist.domain.AddShopItemUseCase
 import com.example.shoplist.domain.EditShopItemUseCase
 import com.example.shoplist.domain.GetShopItemUseCase
 import com.example.shoplist.domain.ShopItem
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 const val EMPTY_STRING = ""
 
@@ -38,34 +43,43 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
 
-    fun getShopItem(shopItemId: Int) {
-        _shopItem.value = getShopItemUseCase.getShopItemById(shopItemId)
-    }
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-    fun addShopItem(inputName: String?, inputCount: String?) {
-        val name = parseName(inputName)
-        val count = parseCount(inputCount)
-        val fieldsValid = validateInput(name, count)
-        if (fieldsValid) {
-            val shopItem = ShopItem(name, count, true)
-            addShopItemUseCase.addShopItem(shopItem)
-            finishWork()
+    fun getShopItem(shopItemId: Int) {
+        coroutineScope.launch {
+            _shopItem.value = getShopItemUseCase.getShopItemById(shopItemId)
         }
     }
 
-    fun editShopItem(inputName: String?, inputCount: String?) {
-        val name = parseName(inputName)
-        val count = parseCount(inputCount)
-        val fieldsValid = validateInput(name, count)
-        if (fieldsValid) {
-            shopItem.value?.let {
-                editShopItemUseCase.editShopItem(
-                    it.copy(
-                        name = name,
-                        count = count,
-                    )
-                )
+    fun addShopItem(inputName: String?, inputCount: String?) {
+        coroutineScope.launch {
+            val name = parseName(inputName)
+            val count = parseCount(inputCount)
+            val fieldsValid = validateInput(name, count)
+            if (fieldsValid) {
+                val shopItem = ShopItem(name, count, true)
+                addShopItemUseCase.addShopItem(shopItem)
                 finishWork()
+            }
+        }
+
+    }
+
+    fun editShopItem(inputName: String?, inputCount: String?) {
+        coroutineScope.launch {
+            val name = parseName(inputName)
+            val count = parseCount(inputCount)
+            val fieldsValid = validateInput(name, count)
+            if (fieldsValid) {
+                shopItem.value?.let {
+                    editShopItemUseCase.editShopItem(
+                        it.copy(
+                            name = name,
+                            count = count,
+                        )
+                    )
+                    finishWork()
+                }
             }
         }
     }
@@ -107,4 +121,8 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
         _shouldCloseScreen.value = Unit
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        coroutineScope.cancel()
+    }
 }
