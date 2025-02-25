@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.shoplist.R
 import com.example.shoplist.domain.ShopItem
 import com.google.android.material.textfield.TextInputLayout
+import javax.inject.Inject
 
 class ShopItemFragment() : Fragment() {
 
@@ -27,10 +28,17 @@ class ShopItemFragment() : Fragment() {
 
     private lateinit var viewModel: ShopItemViewModel
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    private val component by lazy {
+        (requireActivity().application as ShopListApp).component
+    }
+
     var screenMode: String = MODE_UNKNOWN
     var shopItemId: Int = ShopItem.UNDEFINED_ID
 
     override fun onAttach(context: Context) {
+        component.inject(this)
         super.onAttach(context)
         if (context is onEditingFinished) onEditingFinishedListener = context
         else throw RuntimeException("Activity must implement Listener")
@@ -51,7 +59,7 @@ class ShopItemFragment() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[ShopItemViewModel::class.java]
         initViews(view)
         addTextChangeListeners()
         launchRightMode()
