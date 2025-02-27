@@ -1,5 +1,6 @@
-package com.example.shoplist.presentation
+package com.example.shoplist.presentation.main
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -11,13 +12,22 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoplist.R
+import com.example.shoplist.presentation.shopItem.MAX_POOL_SIZE
+import com.example.shoplist.presentation.shopItem.SHOP_LIST_DISABLED
+import com.example.shoplist.presentation.shopItem.SHOP_LIST_ENABLED
+import com.example.shoplist.presentation.shopItem.ShopItemActivity
+import com.example.shoplist.presentation.shopItem.ShopItemFragment
+import com.example.shoplist.presentation.shopItem.ShopListAdapter
+import com.example.shoplist.presentation.ShopListApp
+import com.example.shoplist.presentation.ViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.onEditingFinished {
     private lateinit var shopListAdapter: ShopListAdapter
 
-    private lateinit var viewModel : MainViewModel
+    private lateinit var viewModel: MainViewModel
+
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private val component by lazy {
@@ -48,6 +58,16 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.onEditingFinished {
                 launchFragment(ShopItemFragment.newInstanceAddShopItemFragment())
             }
         }
+
+        contentResolver.query(
+            Uri.parse("content://com.example.shoplist/shopItems"),
+            // Адрес куда отправляем запрос content + authorities / название таблицы
+            null,
+            null,
+            null,
+            null,
+            null
+        )
     }
 
     override fun onEditingFinished() {

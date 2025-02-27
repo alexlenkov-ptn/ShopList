@@ -1,8 +1,8 @@
 package com.example.shoplist.di
 
 import android.app.Application
-import com.example.shoplist.presentation.MainActivity
-import com.example.shoplist.presentation.ShopItemFragment
+import com.example.shoplist.presentation.main.MainActivity
+import com.example.shoplist.presentation.shopItem.ShopItemFragment
 import dagger.BindsInstance
 import dagger.Component
 

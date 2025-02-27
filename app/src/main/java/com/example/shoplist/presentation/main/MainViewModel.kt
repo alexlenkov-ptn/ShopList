@@ -1,4 +1,4 @@
-package com.example.shoplist.presentation
+package com.example.shoplist.presentation.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

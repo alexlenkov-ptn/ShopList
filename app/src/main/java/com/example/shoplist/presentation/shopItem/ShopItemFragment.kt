@@ -1,4 +1,4 @@
-package com.example.shoplist.presentation
+package com.example.shoplist.presentation.shopItem
 
 import android.content.Context
 import android.os.Bundle
@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.shoplist.R
 import com.example.shoplist.domain.ShopItem
+import com.example.shoplist.presentation.ShopListApp
+import com.example.shoplist.presentation.ViewModelFactory
 import com.google.android.material.textfield.TextInputLayout
 import javax.inject.Inject
 

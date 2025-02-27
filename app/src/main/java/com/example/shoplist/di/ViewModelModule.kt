@@ -1,8 +1,8 @@
 package com.example.shoplist.di
 
 import androidx.lifecycle.ViewModel
-import com.example.shoplist.presentation.MainViewModel
-import com.example.shoplist.presentation.ShopItemViewModel
+import com.example.shoplist.presentation.main.MainViewModel
+import com.example.shoplist.presentation.shopItem.ShopItemViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
