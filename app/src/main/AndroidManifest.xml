@@ -30,7 +30,7 @@
             android:windowSoftInputMode="adjustResize" />
 
         <provider
-            android:name=".data.ShopListProvider"
+            android:name=".data.ShopListContentProvider"
             android:authorities="com.example.shoplist"
             android:exported="true" />
     </application>

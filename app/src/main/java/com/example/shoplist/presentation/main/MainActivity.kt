@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.onEditingFinished {
         }
 
         contentResolver.query(
-            Uri.parse("content://com.example.shoplist/shopItems"),
+            Uri.parse("content://com.example.shoplist/shopItems/3"),
             // Адрес куда отправляем запрос content + authorities / название таблицы
             null,
             null,
