@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.LongDef
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoplist.R
+import com.example.shoplist.domain.ShopItem
 import com.example.shoplist.presentation.shopItem.MAX_POOL_SIZE
 import com.example.shoplist.presentation.shopItem.SHOP_LIST_DISABLED
 import com.example.shoplist.presentation.shopItem.SHOP_LIST_ENABLED
@@ -22,6 +24,7 @@ import com.example.shoplist.presentation.ShopListApp
 import com.example.shoplist.presentation.ViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import javax.inject.Inject
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.onEditingFinished {
     private lateinit var shopListAdapter: ShopListAdapter
@@ -59,15 +62,34 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.onEditingFinished {
             }
         }
 
-        contentResolver.query(
-            Uri.parse("content://com.example.shoplist/shopItems/3"),
-            // Адрес куда отправляем запрос content + authorities / название таблицы
-            null,
-            null,
-            null,
-            null,
-            null
-        )
+        thread {
+            val cursor = contentResolver.query(
+                Uri.parse("content://com.example.shoplist/shopItems/3"),
+                // Адрес куда отправляем запрос content + authorities / название таблицы
+                null,
+                null,
+                null,
+                null,
+                null
+            )
+
+            while (cursor?.moveToNext() == true) {
+                Log.d("MainActivity", "Cursor: ${cursor.columnCount}")
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
+                val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                val count = cursor.getInt(cursor.getColumnIndexOrThrow("count"))
+                val enable = cursor.getInt(cursor.getColumnIndexOrThrow("enable")) > 0
+
+                val shopItem = ShopItem(name, count, enable, id)
+
+                Log.d("MainActivity", shopItem.toString())
+            }
+
+            cursor?.close()
+        }
+
+
+
     }
 
     override fun onEditingFinished() {
