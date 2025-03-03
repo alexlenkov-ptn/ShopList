@@ -89,7 +89,6 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.onEditingFinished {
         }
 
 
-
     }
 
     override fun onEditingFinished() {
@@ -149,8 +148,17 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.onEditingFinished {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val position = viewHolder.adapterPosition
                     val itemShop = shopListAdapter.currentList[position]
-                    viewModel.removeShopItem(itemShop)
-                    Log.d("MainActivity", "remove: ${viewModel.mainViewModelState.value}")
+
+                    thread {
+                        contentResolver.delete(
+                            Uri.parse("content://com.example.shoplist/shopItems"),
+                            null,
+                            arrayOf(itemShop.id.toString())
+                        )
+                    }
+
+//                    viewModel.removeShopItem(itemShop)
+//                    Log.d("MainActivity", "remove: ${viewModel.mainViewModelState.value}")
                 }
             }
 
