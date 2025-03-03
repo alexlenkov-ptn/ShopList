@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.onEditingFinished {
 
         thread {
             val cursor = contentResolver.query(
-                Uri.parse("content://com.example.shoplist/shopItems/3"),
+                Uri.parse("content://com.example.shoplist/shopItems"),
                 // Адрес куда отправляем запрос content + authorities / название таблицы
                 null,
                 null,
